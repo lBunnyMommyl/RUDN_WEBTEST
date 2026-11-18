@@ -7,8 +7,8 @@ class LoginPage(BasePage):
     URL = "https://www.saucedemo.com/"
 
     USERNAME_INPUT = (
-        By.ID,
-        "user-name"
+    By.NAME,
+    "user-name"
     )
 
     PASSWORD_INPUT = (
