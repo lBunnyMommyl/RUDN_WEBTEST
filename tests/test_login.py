@@ -1,46 +1,16 @@
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+from pages.login_page import LoginPage
+from pages.inventory_page import InventoryPage
 
 
-def test_login_raw():
+def test_login_with_pom(driver):
 
-    options = webdriver.ChromeOptions()
-    options.add_argument("--headless=new")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
+    login_page = LoginPage(driver).open()
 
-    driver = webdriver.Chrome(options=options)
-
-    wait = WebDriverWait(driver, 10)
-
-    driver.get("https://www.saucedemo.com/")
-
-    username = wait.until(
-        EC.visibility_of_element_located(
-            (By.ID, "user-name")
-        )
+    login_page.login(
+        "standard_user",
+        "secret_sauce"
     )
 
-    username.send_keys("standard_user")
+    inventory_page = InventoryPage(driver)
 
-    password = driver.find_element(
-        By.ID,
-        "password"
-    )
-    password.send_keys("secret_sauce")
-
-    login_btn = driver.find_element(
-        By.ID,
-        "login-button"
-    )
-    login_btn.click()
-
-    wait.until(
-        EC.url_contains("inventory")
-    )
-
-    assert "inventory" in driver.current_url
-
-    driver.quit()
+    assert inventory_page.get_title() == "Products"
